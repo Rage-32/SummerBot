@@ -7,6 +7,20 @@ namespace SummerBot.Commands;
 
 public class GeneralCommands(WeatherService weather)
 {
+    [Command("summer_fact")]
+    [Description("Get a random summer-themed fact.")]
+    public async Task SummerFactCommand(CommandContext ctx)
+    {
+        var fact = SummerFacts[Random.Shared.Next(SummerFacts.Length)];
+        
+        var embed = new DiscordEmbedBuilder()
+            .WithTitle("☀️ Summer Fact")
+            .WithDescription(fact)
+            .WithColor(new DiscordColor(0xFF8C00));
+        
+        await ctx.RespondAsync(embed);
+    }
+    
     [Command("ping")]
     [Description("Test the connection latency.")]
     public async Task PingCommand(CommandContext ctx)
@@ -15,6 +29,7 @@ public class GeneralCommands(WeatherService weather)
             .WithTitle("🏓 Pong!")
             .WithDescription($"**Latency:** {ctx.Client.GetConnectionLatency(ctx.Guild?.Id ?? 0)}ms")
             .WithColor(new DiscordColor(0xFF8C00));
+        
         await ctx.RespondAsync(embed);
     }
 
@@ -72,6 +87,29 @@ public class GeneralCommands(WeatherService weather)
             .WithColor(new DiscordColor(0xFF8C00));
 
         await ctx.RespondAsync(embed);
-
     }
+    
+    private static readonly string[] SummerFacts =
+    [
+        "The Eiffel Tower expands up to 15 cm in summer heat.",
+        "Watermelon is 92% water - perfect for a hot day.",
+        "The first ice cream cone was invented at the 1904 World's Fair.",
+        "Summer solstice has the most daylight of any day of the year.",
+        "Antarctica is actually farther from the sun in summer - the tilt matters more than distance.",
+        "Ancient Greeks held the first Olympic Games in summer to honor Zeus.",
+        "A single lightning bolt can heat the air to 30,000°C - five times hotter than the sun's surface.",
+        "Sunflowers track the sun across the sky - a behavior called heliotropism.",
+        "There's a beach in California made entirely of sea glass.",
+        "The Great Barrier Reef can be seen from space - and it's at its most colorful in summer.",
+        "The popsicle was invented by an 11-year-old in 1905, after he left a stirred drink outside overnight and it froze.",
+        "The hottest temperature ever recorded on Earth was 56.7°C (134°F), in Death Valley in 1913.",
+        "You can estimate the temperature by counting cricket chirps - it's called Dolbear's Law.",
+        "Honeybees cool their hives in summer by fanning their wings in unison.",
+        "Above the Arctic Circle, the sun doesn't set at all for part of summer - it's called the midnight sun.",
+        "Watermelons are botanically related to cucumbers, both part of the gourd family.",
+        "Sweat itself doesn't cool you down - it's the evaporation off your skin that does.",
+        "The months July and August were renamed after Julius Caesar and Augustus, both Roman emperors.",
+        "Fireflies use bioluminescent flashes to attract mates on summer nights, and each species has its own flash pattern.",
+        "Ice cream sales spike on the hottest days, but historically, more is sold on Sundays than any other day of the week."
+    ];
 }

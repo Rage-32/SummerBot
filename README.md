@@ -17,4 +17,5 @@ Powered by [stellarbot.dev](https://stellarbot.dev/)
   - `/photo_leaderboard` - Top 10 ranked by net upvotes
   - `/photo_remove` - (Manage Guild) Delete a specific submission
   - `/photo_reset` - (Manage Guild) Wipe all submissions and votes
-- **Weather** - Current weather conditions via OpenWeatherMap (temperature, humidity, wind speed, description)
+- **Weather** (/weather) - Current weather conditions via OpenWeatherMap (temperature, humidity, wind speed, description)
+- **Random Summer Fact** (/summer_fact) - Get a random summer-themed fact
