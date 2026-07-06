@@ -19,16 +19,17 @@ public class GeneralCommands(WeatherService weather)
     }
 
     [Command("weather")]
-    public async Task WeatherCommand(CommandContext ctx, string city)
+    [Description("View the weather in a location.")]
+    public async Task WeatherCommand(CommandContext ctx, [Description("The location to view the weather in.")] string location)
     {
         await ctx.DeferResponseAsync();
 
-        var result = await weather.GetWeatherAsync(city);
+        var result = await weather.GetWeatherAsync(location);
         if (result is null)
         {
             var notFound = new DiscordEmbedBuilder()
                 .WithTitle("❌ City Not Found")
-                .WithDescription($"Couldn't find weather for \"{city}\".")
+                .WithDescription($"Couldn't find weather for \"{location}\".")
                 .WithColor(new DiscordColor(0xFF6B35));
             await ctx.RespondAsync(notFound);
             return;
