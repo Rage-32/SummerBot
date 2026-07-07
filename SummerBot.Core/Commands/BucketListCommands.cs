@@ -16,6 +16,7 @@ public class BucketListCommands(SummerBotDbContext db)
         var entry = new BucketListItem
         {
             UserId = ctx.User.Id,
+            GuildId = ctx.Guild?.Id ?? 0,
             Description = item,
             CreatedAt = DateTime.UtcNow
         };

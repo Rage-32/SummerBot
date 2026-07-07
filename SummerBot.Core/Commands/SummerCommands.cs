@@ -1,12 +1,43 @@
 ﻿using System.ComponentModel;
 using DSharpPlus.Commands;
+using DSharpPlus.Commands.ContextChecks;
 using DSharpPlus.Entities;
+using SummerBot.Database.Data;
 using SummerBot.Services;
 
 namespace SummerBot.Commands;
 
-public class SummerCommands(WeatherService weather)
+public class SummerCommands(WeatherService weather, SummerBotDbContext db)
 {
+    [Command("summer_stats")]
+    [Description("View summer stats for this server.")]
+    [RequireGuild]
+    public async Task StatsCommand(CommandContext ctx)
+    {
+        await ctx.DeferResponseAsync();
+        
+        var photoVotesCount = db.PhotoVotes.Count(pv => pv.GuildId == ctx.Guild!.Id);
+        var photoCount = db.PhotoSubmissions.Count(ps => ps.GuildId == ctx.Guild!.Id);
+
+        var bucketUniqueUsers = db.BucketListItems
+            .Where(bl => bl.GuildId == ctx.Guild!.Id).Select(x => x.UserId)
+            .Distinct()
+            .Count();
+        var bucketCount = db.BucketListItems.Count(bl => bl.GuildId == ctx.Guild!.Id);
+        var bucketDoneCount = db.BucketListItems.Count(bl => bl.GuildId == ctx.Guild!.Id && bl.IsCompleted);
+
+        var rate = bucketCount > 0 ? (int)Math.Round((double)bucketDoneCount / bucketCount * 100) : 0;
+        
+        var embed = new DiscordEmbedBuilder()
+            .WithTitle("📊 SummerBot Server Stats")
+            .WithColor(0xFF8C00)
+            .AddField("Bucket List", $"Created: **{bucketCount}**\nCompleted: **{bucketDoneCount}**\nRate: **{rate}%**", true)
+            .AddField("Photo Contest", $"Submissions: **{photoCount}**\nVotes: **{photoVotesCount}**", true)
+            .AddField("Participants", $"**{bucketUniqueUsers}** member{(bucketUniqueUsers == 1 ? "" : "s")}", true);
+
+        await ctx.RespondAsync(embed);
+    }
+    
     [Command("summer_fact")]
     [Description("Get a random summer-themed fact.")]
     public async Task SummerFactCommand(CommandContext ctx)
